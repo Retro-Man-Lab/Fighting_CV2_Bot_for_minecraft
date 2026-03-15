@@ -57,3 +57,7 @@ python main.py
 Внимательно следи за тем, какие клавиши нажимаются
 
 ![Bot demo](assets/demo.gif)
+
+## Лицензия
+
+MIT
