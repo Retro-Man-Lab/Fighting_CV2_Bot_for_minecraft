@@ -7,15 +7,8 @@ import time
 kbe = kb.Events()
 mse = ms.Events()
 
-def check_pause_game():
-    if state.active_window:
-        if not state.player['hp'] or not bool(state.player['heal']):
-            return False
-    
-    return True
-
 def controler():
-    if check_pause_game():
+    if state.is_active_window_minecraft:
         if state.player["hp"] <= 4 and state.player["heal"]:
             kbe.click(str(state.player["heal"][0]))
             time.sleep(0.05)

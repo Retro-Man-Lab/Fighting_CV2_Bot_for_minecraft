@@ -11,7 +11,7 @@ class State():
         self.img = None
 
         self.player = {
-            "hp": 0,
+            "hp": 10,
             "heal": [2]
         }
 

@@ -8,7 +8,6 @@ import macros.macros as mac
 import control_panel.ctrl_panel as ct_pan
 import config as cfg
 
-
 def vision_task():
 	while True:
 		if vision.screen.capture():
@@ -32,7 +31,7 @@ def macros_task():
 	while True:
 		if cfg.AUTO_CLICK:
 			mac.macros()
-		time.sleep(0.05)
+		time.sleep(0.01)
 macros_task__ = threading.Thread(target=macros_task, daemon=True)
 macros_task__.start()
 print("[BOOT] Macros system activate")
