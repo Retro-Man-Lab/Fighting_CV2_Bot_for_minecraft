@@ -5,11 +5,13 @@ from rich.table import Table
 import config
 import time
 
+from state import state
+
 console = Console()
 
 def create_panel():
 
-    table = Table(title="BOT PANEL")
+    table = Table(title= "Bot menu")
 
     table.add_column("Key")
     table.add_column("Function")
@@ -54,3 +56,8 @@ def keyboard_task():
 
         elif key.lower() == "q":
             config.RUNNING = False
+
+def get_information():
+    while True:
+        # print(f"{state.player}")
+        time.sleep(0.05)

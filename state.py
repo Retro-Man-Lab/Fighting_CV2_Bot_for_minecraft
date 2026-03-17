@@ -11,8 +11,8 @@ class State():
         self.img = None
 
         self.player = {
-            "hp": 10,
-            "heal": [2]
+            "hp": None,
+            "heal": None
         }
 
         self.prev_state_back = False

@@ -38,8 +38,13 @@ print("[BOOT] Macros system activate")
 
 print("\n[BOOT] Bot ready to use\n")
 
-threading.Thread(target=ct_pan.panel_task, daemon=True).start()
-threading.Thread(target=ct_pan.keyboard_task, daemon=True).start()
+test = False
+
+if test:
+	threading.Thread(target=ct_pan.get_information, daemon=True).start()
+else:
+	threading.Thread(target=ct_pan.panel_task, daemon=True).start()
+	threading.Thread(target=ct_pan.keyboard_task, daemon=True).start()
 
 while cfg.RUNNING:
 	time.sleep(0.001)

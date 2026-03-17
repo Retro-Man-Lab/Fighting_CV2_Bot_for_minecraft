@@ -8,7 +8,7 @@ kbe = kb.Events()
 mse = ms.Events()
 
 def controler():
-    if state.is_active_window_minecraft:
+    if state.is_active_window_minecraft and bool(state.player["hp"]):
         if state.player["hp"] <= 4 and state.player["heal"]:
             kbe.click(str(state.player["heal"][0]))
             time.sleep(0.05)

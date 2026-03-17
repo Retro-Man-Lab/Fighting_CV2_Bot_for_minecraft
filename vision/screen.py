@@ -4,6 +4,8 @@ import win32gui
 import mss
 import numpy as np
 
+import time
+
 def update_active_window():
     hwnd = win32gui.GetForegroundWindow()
     state.active_window = win32gui.GetWindowText(hwnd)
@@ -53,6 +55,7 @@ def capture():
     }
 
     with mss.mss() as sct:
+        time.sleep(2)
         state.img = np.array(sct.grab(monitor))
 
     return True

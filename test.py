@@ -15,11 +15,16 @@ def mouse_callback(event, x, y, flags, param):
         print(f"x={x}, y={y}")
         print(f"BGR: {b}, {g}, {r}")
 
-cv2.imshow("hud", hud)
-cv2.setMouseCallback("hud", mouse_callback, hud)
+y, x, a = hud.shape
+hud_croped = hud[int(y*0.5): y, : ]
+
+cv2.imshow("hud", hud_croped)
+cv2.setMouseCallback("hud", mouse_callback, hud_croped)
 cv2.waitKey(0)
 
-hsv = cv2.cvtColor(hud, cv2.COLOR_BGR2HSV)
+hsv = cv2.cvtColor(hud_croped, cv2.COLOR_BGR2HSV)
+
+print(hsv.shape)
 
 cv2.imshow("hud", hsv)
 cv2.setMouseCallback("hud", mouse_callback, hsv)
@@ -43,14 +48,10 @@ hearts = 0
 for cnt in contours:
     x,y,w,h = cv2.boundingRect(cnt)
 
-    area = cv2.contourArea(cnt)
-    ratio = w / h
+    cv2.rectangle(hud, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    hearts += 1
 
-    if 80 < area < 800 and 0.7 < ratio < 1.3 and x < hud.shape[1]*0.5:
-        cv2.rectangle(hud, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        hearts += 1
-
-print(hearts)
+print(len(contours))
 cv2.imshow("hud", hud)
 cv2.setMouseCallback("hud", mouse_callback, hud)
 cv2.waitKey(0)
