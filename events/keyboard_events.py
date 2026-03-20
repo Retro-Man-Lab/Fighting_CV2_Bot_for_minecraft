@@ -47,21 +47,27 @@ class Events:
         "9": 0x39,
 
         "SPACE": 0x20,
-        "SHIFT": 0x10,
-        "CTRL": 0x11,
-        "ALT": 0x12,
+        "SHIFT_L": 0x10,
+        "CONTROL_L": 0x11,
+        "ALT_L": 0x12,
         "TAB": 0x09,
-        "ENTER": 0x0D,
-        "ESC": 0x1B
+        "RETURN": 0x0D,
+        "ESCAPE": 0x1B
     }
 
     def _get_vk(self, key):
         key = key.upper()
-        return self.KEYMAP[key]
+        try:
+            return self.KEYMAP[key]
+        except KeyError:
+            return False
 
     def is_pressed(self, key):
-        vk = self._get_vk(key)
-        return bool(user32.GetAsyncKeyState(vk) & 0x8000)
+        if not key:
+            return False
+        if self._get_vk(key):
+            vk = self._get_vk(key)
+            return bool(user32.GetAsyncKeyState(vk) & 0x8000)
 
     def key_down(self, key):
         vk = self._get_vk(key)

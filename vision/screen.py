@@ -55,7 +55,6 @@ def capture():
     }
 
     with mss.mss() as sct:
-        time.sleep(2)
         state.img = np.array(sct.grab(monitor))
 
     return True

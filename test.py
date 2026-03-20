@@ -1,57 +1,87 @@
-import cv2
-import numpy as np
+import tkinter as tk
+from tkinter import ttk
 
-hud = cv2.imread("minecraft/fiting_CV2_Bot/images/hud.png")
+root = tk.Tk()
+root.title("Minecraft PvP Trainer Bot")
+root.geometry("320x240")
+root.resizable(False, False)
 
-def mouse_callback(event, x, y, flags, param):
+# ---- Variables ----
+macros_var = tk.BooleanVar()
+autoheal_var = tk.BooleanVar()
+cps_var = tk.IntVar(value=10)
 
-    if event == cv2.EVENT_LBUTTONDOWN:
+autoclick_key = tk.StringVar(value="None")
+autoheal_key = tk.StringVar(value="None")
 
-        hud = param
+waiting_for = None
 
-        pixel = hud[y, x]  # BGR
-        b, g, r = pixel
+# ---- Key capture ----
+def set_key(target):
+    global waiting_for
+    waiting_for = target
 
-        print(f"x={x}, y={y}")
-        print(f"BGR: {b}, {g}, {r}")
+def on_key(event):
+    global waiting_for
 
-y, x, a = hud.shape
-hud_croped = hud[int(y*0.5): y, : ]
+    if waiting_for == "autoclick":
+        autoclick_key.set(event.keysym)
 
-cv2.imshow("hud", hud_croped)
-cv2.setMouseCallback("hud", mouse_callback, hud_croped)
-cv2.waitKey(0)
+    elif waiting_for == "autoheal":
+        autoheal_key.set(event.keysym)
 
-hsv = cv2.cvtColor(hud_croped, cv2.COLOR_BGR2HSV)
+    waiting_for = None
 
-print(hsv.shape)
+root.bind("<KeyPress>", on_key)
 
-cv2.imshow("hud", hsv)
-cv2.setMouseCallback("hud", mouse_callback, hsv)
-cv2.waitKey(0)
+# ---- UI ----
+title = ttk.Label(root, text="Bot Settings", font=("Arial", 14))
+title.pack(pady=10)
 
-lower = np.array([5, 100, 140])
-upper = np.array([15, 120, 210])
+ttk.Checkbutton(root, text="Macros", variable=macros_var).pack(anchor="w", padx=20)
+ttk.Checkbutton(root, text="Auto Heal", variable=autoheal_var).pack(anchor="w", padx=20)
 
-mask = cv2.inRange(hsv, lower, upper)
+# ---- CPS ----
+cps_frame = ttk.Frame(root)
+cps_frame.pack(pady=10)
 
-cv2.imshow("hud", mask)
-cv2.waitKey(0)
+ttk.Label(cps_frame, text="CPS:").pack(side="left")
+ttk.Entry(cps_frame, textvariable=cps_var, width=5).pack(side="left", padx=5)
 
+# ---- AutoClick key ----
+click_frame = ttk.Frame(root)
+click_frame.pack(pady=5)
 
-kernel = np.ones((3,3),np.uint8)
-mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+ttk.Label(click_frame, text="AutoClick:").pack(side="left")
+ttk.Label(click_frame, textvariable=autoclick_key, width=8).pack(side="left", padx=5)
 
-contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+ttk.Button(
+    click_frame,
+    text="Set",
+    command=lambda: set_key("autoclick")
+).pack(side="left")
 
-hearts = 0
-for cnt in contours:
-    x,y,w,h = cv2.boundingRect(cnt)
+# ---- AutoHeal key ----
+heal_frame = ttk.Frame(root)
+heal_frame.pack(pady=5)
 
-    cv2.rectangle(hud, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    hearts += 1
+ttk.Label(heal_frame, text="AutoHeal:").pack(side="left")
+ttk.Label(heal_frame, textvariable=autoheal_key, width=8).pack(side="left", padx=5)
 
-print(len(contours))
-cv2.imshow("hud", hud)
-cv2.setMouseCallback("hud", mouse_callback, hud)
-cv2.waitKey(0)
+ttk.Button(
+    heal_frame,
+    text="Set",
+    command=lambda: set_key("autoheal")
+).pack(side="left")
+
+# ---- Start button ----
+def start_bot():
+    print("Macros:", macros_var.get())
+    print("AutoHeal:", autoheal_var.get())
+    print("CPS:", cps_var.get())
+    print("AutoClick key:", autoclick_key.get())
+    print("AutoHeal key:", autoheal_key.get())
+
+ttk.Button(root, text="Start Bot", command=start_bot).pack(pady=15)
+
+root.mainloop()

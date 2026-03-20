@@ -16,10 +16,8 @@ def mouse_callback(event, x, y, flags, param):
         print(f"x={x}, y={y}")
         print(f"BGR: {b}, {g}, {r}")
 
-def count_heards(hud):
+def count_heards(hsv):
     # hud = cv2.imread("minecraft/fiting_CV2_Bot/images/hud.png")
-    hsv = cv2.cvtColor(hud, cv2.COLOR_BGR2HSV)
-
     y, x, a = hsv.shape
     hsv_croped = hsv[0: int(y*0.5), 0: int(x*0.5)]
 
@@ -35,9 +33,7 @@ def count_heards(hud):
     
     state.player['hp'] = len(contours)
 
-def count_heale(hud):
-    hsv = cv2.cvtColor(hud, cv2.COLOR_BGR2HSV)
-
+def count_heale(hsv):
     y, x, a = hsv.shape
     hsv_croped = hsv[int(y*0.5): y, : ]
 
@@ -48,14 +44,14 @@ def count_heale(hud):
 
     contours,_ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    slot_width = hud.shape[1] / 9
+    slot_width = hsv.shape[1] / 9
     slot_area = slot_width ** 2
 
     heal_slots = []
     for cnt in contours:
         x,y,w,h = cv2.boundingRect(cnt)
 
-        x = int(x + w / 2)
+        x = x + w / 2
 
         area = cv2.contourArea(cnt)
         ratio = area / slot_area
@@ -69,10 +65,12 @@ def count_heale(hud):
 
 def analize_screen():
     if state.is_active_window_minecraft:
-        img = state.img
+        img = cv2.resize(state.img, (1366, 768))
 
         h, w = img.shape[:2]
         hud = img[int(h - w * 0.40 * 0.216):h, int(w*0.31):int(w*0.69)]
 
-        count_heards(hud)
-        count_heale(hud)
+        hsv = cv2.cvtColor(hud, cv2.COLOR_BGR2HSV)
+
+        count_heards(hsv)
+        count_heale(hsv)
