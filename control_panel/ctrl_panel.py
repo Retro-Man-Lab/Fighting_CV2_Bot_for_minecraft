@@ -37,15 +37,17 @@ macros_var = tk.BooleanVar(value=cfg.AUTO_CLICK)
 autoheal_var = tk.BooleanVar(value=cfg.AUTO_HEAL)
 kit_cps_var = tk.StringVar(value=str(cfg.KIT_CPS))
 
-autoclick_key = tk.StringVar(value=cfg.AUTOCLICK_KEY)
-autoheal_key = tk.StringVar(value=cfg.AUTOFILL_KEY)
+autoclick_key = tk.StringVar(value=cfg.AUTOCLICK_KEY.upper())
+autoheal_key = tk.StringVar(value=cfg.AUTOFILL_KEY.upper())
 
 # BEDWARS
 bw_pvp_enabled = tk.BooleanVar(value=cfg.BW_PVP_ENABLED)
+bw_pvp_key_var = tk.StringVar(value=cfg.BW_PVP_KEY.upper())
 bw_pvp_slot = tk.StringVar(value=str(cfg.BW_PVP_SLOT))
 bw_pvp_cps = tk.StringVar(value=str(cfg.BW_PVP_CPS))
 
 bw_bridge_enabled = tk.BooleanVar(value=cfg.BW_BRIDGE_ENABLED)
+bw_bridge_key_var = tk.StringVar(value=cfg.BW_BRIDGE_KEY.upper())
 bw_bridge_slot = tk.StringVar(value=str(cfg.BW_BRIDGE_SLOT))
 bw_bridge_cps = tk.StringVar(value=str(cfg.BW_BRIDGE_CPS))
 
@@ -59,6 +61,8 @@ def update_config(*args):
     cfg.AUTO_CLICK = macros_var.get()
     cfg.AUTO_HEAL = autoheal_var.get()
     cfg.SPAM = message_spam_var.get()
+    cfg.BW_PVP_KEY = bw_pvp_key_var.get()
+    cfg.BW_BRIDGE_KEY = bw_bridge_key_var.get()
 
     if kit_cps_var.get().isdigit():
         cfg.KIT_CPS = int(kit_cps_var.get())
@@ -86,12 +90,24 @@ def update_config(*args):
 
 # trace all
 vars_to_track = [
-    macros_var, autoheal_var, kit_cps_var,
-    autoclick_key, autoheal_key,
-    bw_pvp_enabled, bw_bridge_enabled,
-    bw_pvp_slot, bw_bridge_slot,
-    bw_pvp_cps, bw_bridge_cps,
-    mode_var, message_spam_var
+    macros_var,
+    autoheal_var,
+    kit_cps_var,
+    autoclick_key,
+    autoheal_key,
+
+    bw_pvp_enabled,
+    bw_bridge_enabled,
+    bw_pvp_slot,
+    bw_bridge_slot,
+    bw_pvp_cps,
+    bw_bridge_cps,
+
+    bw_pvp_key_var,
+    bw_bridge_key_var,
+
+    message_spam_var,
+    mode_var
 ]
 
 for v in vars_to_track:
@@ -106,10 +122,16 @@ def on_key(event):
     global waiting_for
 
     if waiting_for == "autoclick":
-        autoclick_key.set(event.keysym)
+        autoclick_key.set(event.keysym.upper())
 
     elif waiting_for == "autoheal":
-        autoheal_key.set(event.keysym)
+        autoheal_key.set(event.keysym.upper())
+    
+    elif waiting_for == "bw_pvp":
+        bw_pvp_key_var.set(event.keysym.upper())
+
+    elif waiting_for == "bw_bridge":
+        bw_bridge_key_var.set(event.keysym.upper())
 
     waiting_for = None
 
@@ -153,6 +175,15 @@ def show(name):
 
     frames[name].pack(fill="both", expand=True)
     title.config(text=name.replace("_", " ").title())
+
+    sizes = {
+        "kit_pvp": "350x240",
+        "bedwars": "350x450",
+        "settings": "350x360"
+    }
+
+    if name in sizes:
+        root.geometry(sizes[name])
 
 def dark_check(parent, text, var):
     cb = tk.Checkbutton(
@@ -232,6 +263,19 @@ tk.Label(
 
 dark_check(pvp_card, "Activate", bw_pvp_enabled).pack(anchor="w")
 
+# ===== KEY =====
+row_key = tk.Frame(pvp_card, bg=CARD)
+row_key.pack(fill="x", pady=3)
+
+tk.Label(row_key, text="Key", bg=CARD, fg=TEXT).pack(side="left")
+
+tk.Label(row_key, textvariable=bw_pvp_key_var, bg=CARD, fg=ACCENT).pack(side="left", padx=5)
+
+btn = tk.Label(row_key, text="Set", bg=CARD, fg=TEXT, cursor="hand2")
+btn.pack(side="right")
+hover(btn)
+btn.bind("<Button-1>", lambda e: set_key("bw_pvp"))
+
 # Slot
 row1 = tk.Frame(pvp_card, bg=CARD)
 row1.pack(fill="x", pady=3)
@@ -277,6 +321,18 @@ tk.Label(
 ).pack(anchor="w")
 
 dark_check(bridge_card, "Activate", bw_bridge_enabled).pack(anchor="w")
+
+row_key2 = tk.Frame(bridge_card, bg=CARD)
+row_key2.pack(fill="x", pady=3)
+
+tk.Label(row_key2, text="Key", bg=CARD, fg=TEXT).pack(side="left")
+
+tk.Label(row_key2, textvariable=bw_bridge_key_var, bg=CARD, fg=ACCENT).pack(side="left", padx=5)
+
+btn2 = tk.Label(row_key2, text="Set", bg=CARD, fg=TEXT, cursor="hand2")
+btn2.pack(side="right")
+hover(btn2)
+btn2.bind("<Button-1>", lambda e: set_key("bw_bridge"))
 
 # Slot
 row3 = tk.Frame(bridge_card, bg=CARD)

@@ -20,11 +20,13 @@ class Config:
 
     # ===== BEDWARS PVP =====
     BW_PVP_ENABLED: bool = False
+    BW_PVP_KEY: str = "X"
     BW_PVP_SLOT: int = 1
     BW_PVP_CPS: int = 10
 
     # ===== BEDWARS BRIDGE =====
     BW_BRIDGE_ENABLED: bool = False
+    BW_BRIDGE_KEY: str = "C"
     BW_BRIDGE_SLOT: int = 2
     BW_BRIDGE_CPS: int = 15
 
