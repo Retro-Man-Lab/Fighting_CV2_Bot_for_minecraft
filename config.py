@@ -1,43 +1,50 @@
 import json
+from dataclasses import dataclass, asdict
 
-# ---- default values ----
-RUNNING = True
+CONFIG_PATH = "bd.json"
 
-AUTO_CLICK = True
-AUTO_HEAL = True
-clicks_per_second = 20
 
-AUTOCLICK_KEY = "X"
-AUTOFILL_KEY = "H"
+@dataclass
+class Config:
+    # ===== GLOBAL =====
+    MODE: str = "kit_pvp"
+    SPAM: bool = True
+
+    # ===== KIT PVP =====
+    AUTO_CLICK: bool = True
+    AUTO_HEAL: bool = True
+    KIT_CPS: int = 20
+
+    AUTOCLICK_KEY: str = "X"
+    AUTOFILL_KEY: str = "H"
+
+    # ===== BEDWARS PVP =====
+    BW_PVP_ENABLED: bool = False
+    BW_PVP_SLOT: int = 1
+    BW_PVP_CPS: int = 10
+
+    # ===== BEDWARS BRIDGE =====
+    BW_BRIDGE_ENABLED: bool = False
+    BW_BRIDGE_SLOT: int = 2
+    BW_BRIDGE_CPS: int = 15
+
+
+config = Config()
 
 
 def load():
-    global AUTO_CLICK, AUTO_HEAL, clicks_per_second
-    global AUTOCLICK_KEY, AUTOFILL_KEY
+    global config
 
     try:
-        with open("bd.json", "r") as f:
+        with open(CONFIG_PATH, "r") as f:
             data = json.load(f)
 
-        AUTO_CLICK = data["AUTO_CLICK"]
-        AUTO_HEAL = data["AUTO_HEAL"]
-        clicks_per_second = data["clicks_per_second"]
-
-        AUTOCLICK_KEY = data["AUTOCLICK_KEY"]
-        AUTOFILL_KEY = data["AUTOFILL_KEY"]
+        config = Config(**data)
 
     except FileNotFoundError:
         save()
 
 
 def save():
-    data = {
-        "AUTO_CLICK": AUTO_CLICK,
-        "AUTO_HEAL": AUTO_HEAL,
-        "clicks_per_second": clicks_per_second,
-        "AUTOCLICK_KEY": AUTOCLICK_KEY,
-        "AUTOFILL_KEY": AUTOFILL_KEY
-    }
-
-    with open("bd.json", "w") as f:
-        json.dump(data, f, indent=4)
+    with open(CONFIG_PATH, "w") as f:
+        json.dump(asdict(config), f, indent=4)

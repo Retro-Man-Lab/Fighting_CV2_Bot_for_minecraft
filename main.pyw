@@ -1,11 +1,13 @@
 import config as cfg
 
 cfg.load()
+cfg = cfg.config
 print('[BOOT] Data loadet')
 
 import time
 import threading
 
+from state import state
 import vision.screen
 import analizer.screen_analize as scr_anal
 import controller.control as contr
@@ -42,5 +44,6 @@ print("[BOOT] Macros system activate")
 
 print("\n[BOOT] Bot ready to use\n")
 
-while cfg.RUNNING:
+while state.RUNNING:
+	ct_pan.show(cfg.MODE)
 	ct_pan.root.mainloop()

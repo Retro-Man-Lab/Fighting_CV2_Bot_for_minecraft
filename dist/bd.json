@@ -1,6 +1,6 @@
 {
     "AUTO_CLICK": true,
-    "AUTO_HEAL": true,
+    "AUTO_HEAL": false,
     "clicks_per_second": 20,
     "AUTOCLICK_KEY": "r",
     "AUTOFILL_KEY": "h"

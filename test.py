@@ -1,87 +1,137 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 root = tk.Tk()
-root.title("Minecraft PvP Trainer Bot")
-root.geometry("320x240")
-root.resizable(False, False)
+root.title("Training Bot")
+root.geometry("350x320")
 
-# ---- Variables ----
-macros_var = tk.BooleanVar()
-autoheal_var = tk.BooleanVar()
-cps_var = tk.IntVar(value=10)
+# ========= TOP =========
+top = tk.Frame(root)
+top.pack(fill="x")
 
-autoclick_key = tk.StringVar(value="None")
-autoheal_key = tk.StringVar(value="None")
+title_label = tk.Label(top, text="Kit PvP", font=("Arial", 12, "bold"))
+title_label.pack(side="left", padx=10)
 
-waiting_for = None
+# ========= CONTAINER =========
+container = tk.Frame(root)
+container.pack(fill="both", expand=True)
 
-# ---- Key capture ----
-def set_key(target):
-    global waiting_for
-    waiting_for = target
+frames = {}
 
-def on_key(event):
-    global waiting_for
+def show_frame(name):
+    for f in frames.values():
+        f.pack_forget()
 
-    if waiting_for == "autoclick":
-        autoclick_key.set(event.keysym)
+    frames[name].pack(fill="both", expand=True)
 
-    elif waiting_for == "autoheal":
-        autoheal_key.set(event.keysym)
+    titles = {
+        "kit_pvp": "Kit PvP",
+        "bedwars": "Bedwars",
+        "settings": "Settings"
+    }
+    title_label.config(text=titles[name])
 
-    waiting_for = None
+# ========= KIT PVP =========
+frame_kit = tk.Frame(container)
 
-root.bind("<KeyPress>", on_key)
+tk.Checkbutton(frame_kit, text="Macros").pack(anchor="w")
+tk.Checkbutton(frame_kit, text="Auto heal").pack(anchor="w")
 
-# ---- UI ----
-title = ttk.Label(root, text="Bot Settings", font=("Arial", 14))
-title.pack(pady=10)
+kit_grid = tk.Frame(frame_kit)
+kit_grid.pack(fill="x", pady=5)
 
-ttk.Checkbutton(root, text="Macros", variable=macros_var).pack(anchor="w", padx=20)
-ttk.Checkbutton(root, text="Auto Heal", variable=autoheal_var).pack(anchor="w", padx=20)
+tk.Label(kit_grid, text="CPS:").grid(row=0, column=0, sticky="w")
+kit_cps = tk.Entry(kit_grid, width=7)
+kit_cps.insert(0, "10")
+kit_cps.grid(row=0, column=1, sticky="e")
 
-# ---- CPS ----
-cps_frame = ttk.Frame(root)
-cps_frame.pack(pady=10)
+macro = tk.Frame(frame_kit, bd=1, relief="solid")
+macro.pack(pady=10, fill="x")
 
-ttk.Label(cps_frame, text="CPS:").pack(side="left")
-ttk.Entry(cps_frame, textvariable=cps_var, width=5).pack(side="left", padx=5)
+tk.Label(macro, text="A").pack(side="left")
+tk.Button(macro, text="Set").pack(side="left", padx=5)
 
-# ---- AutoClick key ----
-click_frame = ttk.Frame(root)
-click_frame.pack(pady=5)
+tk.Label(macro, text="H").pack(side="left", padx=10)
+tk.Button(macro, text="Set").pack(side="left")
 
-ttk.Label(click_frame, text="AutoClick:").pack(side="left")
-ttk.Label(click_frame, textvariable=autoclick_key, width=8).pack(side="left", padx=5)
+frames["kit_pvp"] = frame_kit
 
-ttk.Button(
-    click_frame,
-    text="Set",
-    command=lambda: set_key("autoclick")
-).pack(side="left")
+# ========= BEDWARS =========
+frame_bw = tk.Frame(container)
 
-# ---- AutoHeal key ----
-heal_frame = ttk.Frame(root)
-heal_frame.pack(pady=5)
+# ===== PVP =====
+pvp_frame = tk.Frame(frame_bw)
+pvp_frame.pack(fill="x", pady=5)
 
-ttk.Label(heal_frame, text="AutoHeal:").pack(side="left")
-ttk.Label(heal_frame, textvariable=autoheal_key, width=8).pack(side="left", padx=5)
+tk.Label(pvp_frame, text="PVP", font=("Arial", 10, "bold")).grid(row=0, column=0, columnspan=2)
 
-ttk.Button(
-    heal_frame,
-    text="Set",
-    command=lambda: set_key("autoheal")
-).pack(side="left")
+pvp_state = tk.BooleanVar()
+tk.Checkbutton(pvp_frame, text="Activate", variable=pvp_state).grid(row=1, column=0, columnspan=2, sticky="w")
 
-# ---- Start button ----
-def start_bot():
-    print("Macros:", macros_var.get())
-    print("AutoHeal:", autoheal_var.get())
-    print("CPS:", cps_var.get())
-    print("AutoClick key:", autoclick_key.get())
-    print("AutoHeal key:", autoheal_key.get())
+tk.Label(pvp_frame, text="Slot sword:").grid(row=2, column=0, sticky="w")
+slot_sword = tk.Spinbox(pvp_frame, from_=1, to=9, width=5)
+slot_sword.delete(0, "end")
+slot_sword.insert(0, "1")
+slot_sword.grid(row=2, column=1, sticky="e")
 
-ttk.Button(root, text="Start Bot", command=start_bot).pack(pady=15)
+tk.Label(pvp_frame, text="CPS:").grid(row=3, column=0, sticky="w")
+pvp_cps = tk.Entry(pvp_frame, width=7)
+pvp_cps.insert(0, "10")
+pvp_cps.grid(row=3, column=1, sticky="e")
+
+ttk.Separator(frame_bw, orient="horizontal").pack(fill="x", pady=10)
+
+# ===== BRIDGING =====
+bridge_frame = tk.Frame(frame_bw)
+bridge_frame.pack(fill="x", pady=5)
+
+tk.Label(bridge_frame, text="Bridging", font=("Arial", 10, "bold")).grid(row=0, column=0, columnspan=2)
+
+bridge_state = tk.BooleanVar()
+tk.Checkbutton(bridge_frame, text="Activate", variable=bridge_state).grid(row=1, column=0, columnspan=2, sticky="w")
+
+tk.Label(bridge_frame, text="Slot blocks:").grid(row=2, column=0, sticky="w")
+slot_blocks = tk.Spinbox(bridge_frame, from_=1, to=9, width=5)
+slot_blocks.delete(0, "end")
+slot_blocks.insert(0, "2")
+slot_blocks.grid(row=2, column=1, sticky="e")
+
+tk.Label(bridge_frame, text="CPS:").grid(row=3, column=0, sticky="w")
+bridge_cps = tk.Entry(bridge_frame, width=7)
+bridge_cps.insert(0, "15")
+bridge_cps.grid(row=3, column=1, sticky="e")
+
+frames["bedwars"] = frame_bw
+
+# ========= SETTINGS =========
+frame_settings = tk.Frame(container)
+
+mode_var = tk.StringVar(value="kit_pvp")
+
+def apply_settings():
+    show_frame(mode_var.get())
+
+tk.Label(frame_settings, text="Mode:").pack()
+
+tk.Radiobutton(frame_settings, text="Kit PvP", variable=mode_var, value="kit_pvp").pack(anchor="w")
+tk.Radiobutton(frame_settings, text="Bedwars", variable=mode_var, value="bedwars").pack(anchor="w")
+
+tk.Checkbutton(frame_settings, text="Message spam").pack(anchor="w", pady=10)
+
+tk.Button(frame_settings, text="Donate").pack(pady=5)
+
+bottom = tk.Frame(frame_settings)
+bottom.pack(pady=10)
+
+tk.Button(bottom, text="Apply", command=apply_settings).pack(side="left", padx=5)
+tk.Button(bottom, text="Cancel", command=lambda: show_frame("kit_pvp")).pack(side="left", padx=5)
+
+frames["settings"] = frame_settings
+
+# ========= SETTINGS BUTTON =========
+tk.Button(top, text="⚙", command=lambda: show_frame("settings")).pack(side="right", padx=10)
+
+# ========= START =========
+show_frame("kit_pvp")
 
 root.mainloop()

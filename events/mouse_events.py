@@ -22,6 +22,14 @@ class Events:
         "move": 0x0001
     }
 
+    class RECT(ctypes.Structure):
+        _fields_ = [
+            ("left", ctypes.c_long),
+            ("top", ctypes.c_long),
+            ("right", ctypes.c_long),
+            ("bottom", ctypes.c_long)
+        ]
+
     def is_pressed(self, button):
         vk = self.BUTTONS[button]
         return bool(user32.GetAsyncKeyState(vk) & 0x8000)
@@ -43,3 +51,13 @@ class Events:
         pt = ctypes.wintypes.POINT()
         user32.GetCursorPos(ctypes.byref(pt))
         return pt.x, pt.y
+    
+    def mouse_freez(self):
+        point = ctypes.wintypes.POINT()
+        user32.GetCursorPos(ctypes.byref(point))
+
+        rect = self.RECT(point.x, point.y, point.x + 1, point.y + 1)
+        user32.ClipCursor(ctypes.byref(rect))
+
+    def mouse_unfreez(self):
+        user32.ClipCursor(None)
