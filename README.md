@@ -88,7 +88,7 @@ Fighting PvP Bot — это тренировочный инструмент дл
 
 ## 📥 Установка
 
-1. Скачай последнюю версию из раздела Releases
+1. Скачай последнюю версию из раздела Releases [Скачать]([https://t.me/retroLabPvP](https://github.com/Retro-Man-Lab/Fighting_CV2_Bot_for_minecraft/releases/tag/v1.0.0))
 2. Запусти файл
 3. Настрой под себя
 
