@@ -21,7 +21,6 @@ def run_kitpvp():
 
     curent_state_back = mse.is_pressed("back") or kbe.is_pressed(is_autofill_key)
 
-    # ===== HEAL LOGIC =====
     if curent_state_back and not state.prev_state_back:
         kbe.click("E")
         time.sleep(1 / cfg.KIT_CPS)
@@ -34,7 +33,6 @@ def run_kitpvp():
 
     state.prev_state_back = curent_state_back
 
-    # ===== CLICK =====
     now = time.perf_counter()
     delay = 1 / cfg.KIT_CPS
 

@@ -3,6 +3,7 @@ from tkinter import ttk
 import config as conf
 from state import state
 import ctypes
+import webbrowser
 
 cfg = conf.config
 
@@ -16,11 +17,11 @@ root.title("Training Bot")
 root.geometry("350x360")
 
 # ========= THEME =========
-BG = "#0f172a"        # фон
-CARD = "#1e293b"      # блоки
-TEXT = "#e2e8f0"      # текст
-ACCENT = "#38bdf8"    # акцент (синій)
-HOVER = "#334155"     # hover
+BG = "#0f172a"
+CARD = "#1e293b"
+TEXT = "#e2e8f0"
+ACCENT = "#38bdf8"
+HOVER = "#334155"
 
 def hover(widget):
     widget.bind("<Enter>", lambda e: widget.config(bg=HOVER))
@@ -177,7 +178,7 @@ def show(name):
     title.config(text=name.replace("_", " ").title())
 
     sizes = {
-        "kit_pvp": "350x240",
+        "kit_pvp": "350x270",
         "bedwars": "350x450",
         "settings": "350x360"
     }
@@ -229,19 +230,30 @@ tk.Entry(
 # keys
 keys = card(kit)
 
-tk.Label(keys, text="AutoClick", bg=CARD, fg=TEXT).pack(side="left")
-tk.Label(keys, textvariable=autoclick_key, bg=CARD, fg=ACCENT).pack(side="left", padx=5)
+# даємо середині розтягуватись
+keys.grid_columnconfigure(1, weight=1)
+
+# ===== ROW 0 =====
+tk.Label(keys, text="AutoClick", bg=CARD, fg=TEXT)\
+    .grid(row=0, column=0, sticky="w")
+
+tk.Label(keys, textvariable=autoclick_key, bg=CARD, fg=ACCENT)\
+    .grid(row=0, column=1, sticky="w", padx=5)
 
 btn1 = tk.Label(keys, text="Set", bg=CARD, fg=TEXT, cursor="hand2")
-btn1.pack(side="left")
+btn1.grid(row=0, column=2, sticky="e")  # 👈 вправо
 hover(btn1)
 btn1.bind("<Button-1>", lambda e: set_key("autoclick"))
 
-tk.Label(keys, text="AutoHeal", bg=CARD, fg=TEXT).pack(side="left", padx=10)
-tk.Label(keys, textvariable=autoheal_key, bg=CARD, fg=ACCENT).pack(side="left", padx=5)
+# ===== ROW 1 =====
+tk.Label(keys, text="AutoFilling", bg=CARD, fg=TEXT)\
+    .grid(row=1, column=0, sticky="w", pady=5)
+
+tk.Label(keys, textvariable=autoheal_key, bg=CARD, fg=ACCENT)\
+    .grid(row=1, column=1, sticky="w", padx=5)
 
 btn2 = tk.Label(keys, text="Set", bg=CARD, fg=TEXT, cursor="hand2")
-btn2.pack(side="left")
+btn2.grid(row=1, column=2, sticky="e")  # 👈 вправо
 hover(btn2)
 btn2.bind("<Button-1>", lambda e: set_key("autoheal"))
 
@@ -255,7 +267,7 @@ pvp_card = card(bw)
 
 tk.Label(
     pvp_card,
-    text="PVP",
+    text="Auto atack",
     bg=CARD,
     fg=ACCENT,
     font=("Segoe UI", 10, "bold")
@@ -280,7 +292,7 @@ btn.bind("<Button-1>", lambda e: set_key("bw_pvp"))
 row1 = tk.Frame(pvp_card, bg=CARD)
 row1.pack(fill="x", pady=3)
 
-tk.Label(row1, text="Slot", bg=CARD, fg=TEXT).pack(side="left")
+tk.Label(row1, text="Slot sword", bg=CARD, fg=TEXT).pack(side="left")
 
 tk.Spinbox(
     row1,
@@ -338,7 +350,7 @@ btn2.bind("<Button-1>", lambda e: set_key("bw_bridge"))
 row3 = tk.Frame(bridge_card, bg=CARD)
 row3.pack(fill="x", pady=3)
 
-tk.Label(row3, text="Slot", bg=CARD, fg=TEXT).pack(side="left")
+tk.Label(row3, text="Slot blocks", bg=CARD, fg=TEXT).pack(side="left")
 
 tk.Spinbox(
     row3,
@@ -424,7 +436,7 @@ donate_btn.pack(fill="x")
 hover(donate_btn)
 
 # можна потім додати відкриття лінка
-donate_btn.bind("<Button-1>", lambda e: print("donate click"))
+donate_btn.bind("<Button-1>", lambda e: webbrowser.open("https://ko-fi.com/retroman"))
 
 
 # ===== BOTTOM BUTTONS =====

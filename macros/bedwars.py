@@ -11,7 +11,6 @@ mse = ms.Events()
 
 last_click_time = 0
 
-# 🔥 стан кнопок (щоб не спамити слот)
 prev_forward = False
 prev_back = False
 
@@ -25,13 +24,9 @@ def run_bedwars():
     forward = mse.is_pressed("forward") or kbe.is_pressed(is_pvp_key)
     back = mse.is_pressed("back") or kbe.is_pressed(is_bridge_key)
 
-    # ======================
-    # SLOT SWITCH (ОДИН РАЗ)
-    # ======================
-
     if cfg.BW_PVP_ENABLED:
         if forward and not prev_forward:
-            kbe.click(str(cfg.BW_PVP_SLOT))  # 🔥 натискаємо 1-9
+            kbe.click(str(cfg.BW_PVP_SLOT))
 
     if cfg.BW_BRIDGE_ENABLED:
         if back and not prev_back:
@@ -40,13 +35,8 @@ def run_bedwars():
     prev_forward = forward
     prev_back = back
 
-    # ======================
-    # AUTOCLICK
-    # ======================
-
     now = time.perf_counter()
-
-    # 👉 можна окремо зробити delay для кожного
+    
     delay = 1 / cfg.BW_PVP_CPS
 
     if now - last_click_time >= delay:

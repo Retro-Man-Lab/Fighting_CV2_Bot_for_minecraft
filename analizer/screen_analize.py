@@ -17,7 +17,6 @@ def mouse_callback(event, x, y, flags, param):
         print(f"BGR: {b}, {g}, {r}")
 
 def count_heards(hsv):
-    # hud = cv2.imread("minecraft/fiting_CV2_Bot/images/hud.png")
     y, x, a = hsv.shape
     hsv_croped = hsv[0: int(y*0.5), 0: int(x*0.5)]
 
