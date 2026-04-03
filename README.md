@@ -23,8 +23,6 @@ Fighting PvP Bot — это тренировочный инструмент дл
 
 ![PvP Test](assets/demo.gif)
 
-> Тут буде гіфка з тестів (PvP або bridge)
-
 ---
 
 ## ✨ Что нового
